@@ -8,7 +8,7 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <!-- Styles -->
         <style>
             html, body {
@@ -78,22 +78,54 @@
                     @endauth
                 </div>
             @endif
-
+            <div id='list-cate'></div>
             <div class="content">
                 <div class="title m-b-md">
                     Laravel
                 </div>
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
+                <form id="create-cate" action="" method="POST">
+                    <input type="text" name="name">
+                    <button type='submit'>Add</button>
+                </form>
             </div>
         </div>
+
+        <script type="text/javascript">
+            
+            $(document).ready(function () {
+                $('#create-cate').submit(function(e){
+                    e.preventDefault();
+
+                    $.ajax({
+                        url : 'api/v1/categories',
+                        type: 'post',
+                        data: {
+                            'name' : $('input[name=name]').val()
+                        },
+                        success : function(data){
+                            console.log(data);
+                            var html= '<table>'+
+                                    '<thead>'+
+                                        '<tr>'+
+                                        '<td>Name</td></tr>'+
+                                    '</thead>'+
+                                    '<tbody>';
+                            $.each(data,function(key, value) {
+
+                                html += '<tr><td>'+value.name+'</td></tr>';
+                                
+                            });
+                            html += '</tbody>'+
+                            '</table>';
+                            console.log(html);
+                            $('#list-cate').html('');
+                            $('#list-cate').append(html);
+
+                        }
+                    }) ;          
+                })
+            });
+        </script>
     </body>
 </html>
